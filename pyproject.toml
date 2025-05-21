@@ -24,6 +24,8 @@ classifiers = [
 ]
 dependencies = [
     "jupyter_server>=2.4.0,<3",
+    "pycrdt",
+    "pycrdt-websocket>=0.15.0,<0.16.0",
     "brotli"
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
