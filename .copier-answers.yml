@@ -1,0 +1,14 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.3.8
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: dpaudyal@quansight.com
+author_name: qstore
+has_binder: false
+has_settings: false
+kind: server
+labextension_name: qStore
+project_short_description: A Custom YStore implementation
+python_name: q_store
+repository: https://github.com/darshan808/qstore
+test: false
+
