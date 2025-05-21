@@ -1,6 +1,6 @@
 # q_store
 
-[![Github Actions Status](https://github.com/Quansight/QYStore/workflows/Build/badge.svg)](https://github.com/Quansight/QYStore/workflows/build.yml)
+[![Github Actions Status](https://github.com/Quansight/QYStore/workflows/Build/badge.svg)](https://github.com/Quansight/QYStore/blob/main/.github/workflows/build.yml)
 
 # QYStore: A Custom YStore for Jupyter Real-Time Collaboration
 
