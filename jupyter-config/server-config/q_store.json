@@ -1,4 +1,12 @@
 {
+ "YDocExtension": {
+    "ystore_class": "q_store.QYStore"
+  },
+  "QYStore": {
+    "db_path": ":memory:",
+    "document_ttl": 10800,
+    "checkpoint_interval": 400
+  },
   "ServerApp": {
     "jpserver_extensions": {
       "q_store": true

@@ -16,40 +16,44 @@
 
 ## ⚙️ Configuration
 
-To configure your Jupyter Server to use `QYStore`, you need to update your configuration files.
+By default, when you install this package, the following configuration is automatically set:
 
-1. Find your Jupyter config directory:
-
-```bash
-jupyter --paths
+```json
+{
+    "YDocExtension": {
+        "ystore_class": "q_store.QYStore"
+    },
+    "QYStore": {
+        "db_path": ":memory:",
+        "document_ttl": 10800,
+        "checkpoint_interval": 400
+    }
+}
 ```
 
-2. Edit or create a config file (typically in `~/.jupyter/jupyter_server_config.py`) and add the following lines:
+This means:
+
+- The custom `QYStore` class is used as the YStore backend.
+- An in-memory SQLite database is used (`db_path: ":memory:"`), so data is not persisted across server restarts.
+- Documents are deleted from memory after 3 hours (10,800 seconds) of inactivity.
+- A checkpoint is created every 400 updates.
+
+If you need to customize these settings, you can override them in your Jupyter configuration files (e.g., `~/.jupyter/jupyter_server_config.py` or `jupyter_server_config.json`).
+
+For example, to change the TTL or use a persistent database file, update your config as follows:
 
 ```python
-# Use the custom QYStore class
-c.YDocExtension.ystore_class = "q_store.QYStore"
+# Use a persistent SQLite file
+c.QYStore.db_path = "qstore.db"
 
-# Set the TTL (Time-To-Live) in seconds after which inactive documents are deleted from memory
-c.QYStore.document_ttl = 10
+# Set a custom TTL (in seconds)
+c.QYStore.document_ttl = 600  # 10 minutes
 
-# Set the interval (in number of updates) after which checkpoints are created
-c.QYStore.checkpoint_interval = 200
+# Set a custom checkpoint interval
+c.QYStore.checkpoint_interval = 100
 ```
 
----
-
-### 🧠 In-Memory (RAM) Database
-
-If you'd like the store to use an in-memory SQLite database (i.e., data is not persisted across server restarts), add the following:
-
-```python
-c.QYStore.db_path = ":memory:"
-```
-
-This is useful for stateless sessions or ephemeral environments.
-
----
+Refer to the [Jupyter documentation](https://jupyterlab.readthedocs.io/en/stable/user/rtc.html) for more details on configuring server extensions.
 
 ## 🧪 Features Overview
 
