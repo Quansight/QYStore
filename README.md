@@ -53,12 +53,12 @@ This is useful for stateless sessions or ephemeral environments.
 
 ## 🧪 Features Overview
 
-| Feature                | Description                                                                 |
-|------------------------|-----------------------------------------------------------------------------|
-| `document_ttl`         | Automatically clears documents from memory after a specified time of inactivity |
-| `checkpoint_interval`  | Automatically saves a checkpoint every N updates to prevent data loss       |
-| `db_path`              | Choose between a persistent SQLite file or in-memory database (`:memory:`) |
-| Compression            | Document updates are compressed before storing and decompressed when loading |
+| Feature               | Description                                                                     |
+| --------------------- | ------------------------------------------------------------------------------- |
+| `document_ttl`        | Automatically clears documents from memory after a specified time of inactivity |
+| `checkpoint_interval` | Automatically saves a checkpoint every N updates to prevent data loss           |
+| `db_path`             | Choose between a persistent SQLite file or in-memory database (`:memory:`)      |
+| Compression           | Document updates are compressed before storing and decompressed when loading    |
 
 This extension is composed of a Python package named `q_store`
 for the server extension and a NPM package named `qStore`
