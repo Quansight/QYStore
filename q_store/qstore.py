@@ -137,19 +137,15 @@ class QStore(BaseYStore):
         await super().stop()
 
     async def _init_db(self):
-        print("[_init_db] Starting database initialization...")
         def brotli_compress_q1(data: bytes) -> bytes:
             return brotli.compress(data, quality=1)
         self.register_compression_callbacks(compress=brotli_compress_q1, decompress=brotli.decompress)
         create_db = False
         move_db = False
-        print(f"[_init_db] Checking if DB exists at {self.db_path}")
         if not await anyio.Path(self.db_path).exists():
-            print("[_init_db] Database file does not exist, will create new DB.")
             create_db = True
         else:
             async with self.lock:
-                print("[_init_db] Database file exists, connecting...")
                 db = await connect(
                     self.db_path,
                     exception_handler=exception_logger,
@@ -162,13 +158,10 @@ class QStore(BaseYStore):
                         "WHERE type='table' and name='yupdates'"
                     )
                     table_exists = (await cursor.fetchone())[0]
-                    print(f"[_init_db] yupdates table exists: {bool(table_exists)}")
                     if table_exists:
                         await cursor.execute("pragma user_version")
                         version = (await cursor.fetchone())[0]
-                        print(f"[_init_db] DB user_version: {version}, expected: {self.version}")
                         if version != self.version:
-                            print("[_init_db] Version mismatch, will move DB and create new one.")
                             move_db = True
                             create_db = True
                         else:
@@ -177,21 +170,16 @@ class QStore(BaseYStore):
                                 "WHERE type='table' AND name='ycheckpoints'"
                             )
                             ckpt_exists = (await cursor.fetchone())[0]
-                            print(f"[_init_db] ycheckpoints table exists: {bool(ckpt_exists)}")
                             if not ckpt_exists:
-                                print("[_init_db] ycheckpoints table missing, will create new DB.")
                                 create_db = True
                     else:
-                        print("[_init_db] yupdates table missing, will create new DB.")
                         create_db = True
                 await db.close()
         if move_db:
             new_path = await get_new_path(self.db_path)
-            print(f"[_init_db] Moving DB from {self.db_path} to {new_path} due to version mismatch.")
             self.log.warning("YStore version mismatch, moving %s to %s", self.db_path, new_path)
             await anyio.Path(self.db_path).rename(new_path)
         if create_db:
-            print("[_init_db] Creating new database schema...")
             async with self.lock:
                 db = await connect(
                     self.db_path,
@@ -219,9 +207,7 @@ class QStore(BaseYStore):
                     )
                     await cursor.execute(f"PRAGMA user_version = {self.version}")
             self._db = db
-            print("[_init_db] New database created and schema initialized.")
         else:
-            print("[_init_db] Connecting to existing database.")
             self._db = await connect(
                 self.db_path,
                 exception_handler=exception_logger,
@@ -229,7 +215,6 @@ class QStore(BaseYStore):
             )
         assert self.db_initialized is not None
         self.db_initialized.set()
-        print("[_init_db] Database initialization complete.")
 
     def register_compression_callbacks(
         self, compress: Callable[[bytes], bytes], decompress: Callable[[bytes], bytes]
@@ -281,7 +266,6 @@ class QStore(BaseYStore):
         await self.db_initialized.wait()
         async with self.lock:
             async with self._db:
-                print(f"TTL: {self.document_ttl}, Update counter: {self._update_counter}, CP Interval: {self.checkpoint_interval}")
                 # first, determine time elapsed since last update
                 cursor = await self._db.cursor()
                 await cursor.execute(
@@ -297,10 +281,8 @@ class QStore(BaseYStore):
                     # BEFORE squashing
                     await cursor.execute("SELECT COUNT(*) FROM yupdates WHERE path = ?", (self.path,))
                     before_count = (await cursor.fetchone())[0]
-                    print(f"\n[write] Number of updates before squashing: {before_count}")
                     if os.path.isfile(self.db_path):
                         file_size_before = os.path.getsize(self.db_path)
-                        print(f"[write] SQLite file size before squashing: {file_size_before:.2f} Bytes")
 
                     # squash updates
                     ydoc = Doc()
@@ -332,10 +314,8 @@ class QStore(BaseYStore):
                     # AFTER squashing
                     await cursor.execute("SELECT COUNT(*) FROM yupdates WHERE path = ?", (self.path,))
                     after_count = (await cursor.fetchone())[0]
-                    print(f"[write] Number of updates after squashing: {after_count}")
                     if os.path.isfile(self.db_path):
                         file_size_after = os.path.getsize(self.db_path)
-                        print(f"[write] SQLite file size after squashing: {file_size_after:.2f} Bytes")
 
                 # finally, write this update to the DB
                 metadata = await self.get_metadata()
@@ -344,15 +324,12 @@ class QStore(BaseYStore):
                     "INSERT INTO yupdates VALUES (?, ?, ?, ?)",
                     (self.path, compressed_data, metadata, time.time()),
                 )
-                print(f"[write] Added update for path: {self.path}, squashed: {squashed}, update size: {len(data)} bytes, compressed size: {len(compressed_data)} bytes")
                 if os.path.isfile(self.db_path):
                     file_size_now = os.path.getsize(self.db_path)
-                    print(f"[write] SQLite file size after addition: {file_size_now:.2f} Bytes")
 
                 # storing checkpoints
                 self._update_counter += 1
                 if self._update_counter >= self.checkpoint_interval:
-                    print(f"[write] Creating checkpoint for path: {self.path}")
                     # load or init checkpoint
                     await cursor.execute(
                         "SELECT checkpoint, timestamp FROM ycheckpoints WHERE path = ?",
@@ -392,7 +369,6 @@ class QStore(BaseYStore):
                         "VALUES (?, ?, ?)",
                         (self.path, new_ckpt, now),
                     )
-                    print(f"[write] Checkpoint created at {now} for path: {self.path}")
                     self._update_counter = 0
 
 class QYStoreMetaclass(type(LoggingConfigurable), type(QStore)):  # type: ignore
