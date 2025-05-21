@@ -9,6 +9,6 @@ kind: server
 labextension_name: qStore
 project_short_description: A Custom YStore implementation
 python_name: q_store
-repository: https://github.com/darshan808/qstore
+repository: https://github.com/Quansight/QYStore
 test: false
 
