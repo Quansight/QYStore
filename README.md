@@ -21,14 +21,14 @@ By default, when you install this package, the following configuration is automa
 
 ```json
 {
-    "YDocExtension": {
-        "ystore_class": "q_store.QYStore"
-    },
-    "QYStore": {
-        "db_path": ":memory:",
-        "document_ttl": 10800,
-        "checkpoint_interval": 400
-    }
+  "YDocExtension": {
+    "ystore_class": "q_store.QYStore"
+  },
+  "QYStore": {
+    "db_path": ":memory:",
+    "document_ttl": 10800,
+    "checkpoint_interval": 400
+  }
 }
 ```
 
@@ -160,7 +160,6 @@ folder is located. Then you can remove the symlink named `qStore` within that fo
 ### Packaging the extension
 
 See [RELEASE](RELEASE.md)
-
 
 [binder-image]: https://mybinder.org/badge_logo.svg
 [binder-url]: https://mybinder.org/v2/gh/Quansight/QYStore.git/main?urlpath=lab%2Ftree%2Fnotebooks%2Fdemo.ipynb
