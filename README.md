@@ -1,6 +1,7 @@
 # q_store
 
 [![Github Actions Status](https://github.com/Quansight/QYStore/workflows/Build/badge.svg)](https://github.com/Quansight/QYStore/blob/main/.github/workflows/build.yml)
+[![Github Actions Status][github-status-image]][github-status-url] [![Binder][binder-image]][binder-url]
 
 # QYStore: A Custom YStore for Jupyter Real-Time Collaboration
 
@@ -159,3 +160,7 @@ folder is located. Then you can remove the symlink named `qStore` within that fo
 ### Packaging the extension
 
 See [RELEASE](RELEASE.md)
+
+
+[binder-image]: https://mybinder.org/badge_logo.svg
+[binder-url]: https://mybinder.org/v2/gh/Quansight/QYStore.git/main?urlpath=lab%2Ftree%2Fnotebooks%2Fdemo.ipynb
