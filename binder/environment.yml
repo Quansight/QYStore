@@ -1,0 +1,26 @@
+# a mybinder.org-ready environment for demoing jupyterlab_notify
+# this environment may also be used locally on Linux/MacOS/Windows, e.g.
+#
+#   conda env update --file binder/environment.yml
+#   conda activate jupyterlab-notify-demo
+#
+name: qystore-demo
+
+channels:
+  - conda-forge
+
+dependencies:
+  # runtime dependencies
+  - jupyter-collaboration
+  - python >=3.10,<3.11.0a0
+  - jupyter
+  - jupyterlab >=4.0.0b0,<5
+  - pycrdt
+  - pycrdt-websocket>=0.15.0,<0.16.0
+  - brotli
+  # labextension build dependencies
+  - nodejs >=18,<19
+  - pip
+  - wheel
+  # additional packages for demos
+  # - ipywidgets

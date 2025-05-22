@@ -1,5 +1,5 @@
 {
- "YDocExtension": {
+  "YDocExtension": {
     "ystore_class": "q_store.QYStore"
   },
   "QYStore": {
